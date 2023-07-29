@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Display CRUD</title>
+    <style>
+        table {
+          border-collapse: collapse;
+          width: 100%;
+        }
+        
+        th, td {
+          text-align: left;
+          padding: 8px;
+        }
+        
+        tr:nth-child(even){background-color: #f2f2f2}
+        
+        th {
+          background-color: #04AA6D;
+          color: white;
+        }
+        </style>
+</head>
+<body>
+    <table>
+        <tr>
+          <th>Firstname</th>
+          <th>Lastname</th>
+          <th>Email</th>
+          <th>Address</th>
+          <th>Actions</th>
+        </tr>
+        <% for(let i=0; i < data.length; i++) { %>
+            <tr>
+              <td><%= data[i].firstName %></td>
+              <td><%= data[i].lastName %></td>
+              <td><%= data[i].email %></td>
+              <td><%= data[i].address %></td>
+              <td>
+                <a type="button" style="background-color: green; border: none; padding: 10px 20px; border-radius: 3px; color: white; display: inline-block;">
+                    Add
+                </a>
+                <a type="button" href="/edit-crud/?id=<%= data[i].id %>" style="background-color: orange; border: none; padding: 10px 20px; border-radius: 3px; color: white; display: inline-block; margin-left: 10px;">
+                    Edit
+                </a>
+                <a type="button" href="/delete-crud/?id=<%= data[i].id %>" style="background-color: red; border: none; padding: 10px 20px; border-radius: 3px; color: white; display: inline-block; margin-left: 10px;">
+                    Delete
+                </a>
+              </td>
+            </tr>
+         <% } %>
+      </table>    
+</body>
+</html>
