@@ -27,6 +27,8 @@ let initWebRoutes = (app) => {
     router.put("/api/edit-user",userController.handleEditUser)
     router.delete("/api/delete-user",userController.handleDeleteUser)
 
+    router.get("/allcode",userController.handleGetAllCode);
+
 
     return app.use("/",router)
 }
