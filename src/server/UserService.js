@@ -10,7 +10,7 @@ let handleUserLogin = (email,password) => {
             if(isExistEmail){ // neu email ton tai
                 //Compare password
                 let user = await db.User.findOne({
-                    attributes: ["email", "roleId", "password"],
+                    attributes: ["email", "roleId", "password", "lastName"],
                     where: {email: email},
                     raw: true
                 })
@@ -122,10 +122,10 @@ let createNewUser = (data) => {
                     lastName: data.lastName,
                     address: data.address,
                     phoneNumber: data.phoneNumber,
-                    gender: data.gender === "1" ? true : false,
-                    //image: data.image,
+                    gender: data.gender,
                     roleId: data.roleId,
-                    //positionId: data.positionId,
+                    positionId: data.positionId,
+                    image: data.avatar
                 })
                 resolve({
                     errCode: 0,
@@ -169,10 +169,10 @@ let deleteUser = (userId) => {
 let updateUser = (data) => {
     return new Promise ( async (resolve,reject) => {
         try {
-            if(!data.id){
+            if(!data.id || !data.roleId || !data.positionId || !data.gender){
                 resolve({
                     errCode: 2,
-                    message: "Missing id params"
+                    message: "Missing params"
                 })
             }
             let user = await db.User.findOne({
@@ -186,6 +186,11 @@ let updateUser = (data) => {
                 user.firstName = data.firstName;
                 user.lastName = data.lastName;
                 user.address = data.address;
+                user.roleId = data.roleId;
+                user.positionId =data.positionId;
+                user.gender = data.gender;
+                user.image = data.avatar;
+                user.phoneNumber = data.phoneNumber
 
                 await user.save();
 

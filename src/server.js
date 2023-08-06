@@ -29,8 +29,11 @@ app.use(function (req, res, next) {
 });
 
 //cau hinh tham so tu client gui xuong
-app.use(bodyParser.json())
-app.use(bodyParser.urlencoded({extended: true}))
+// app.use(bodyParser.json())
+// app.use(bodyParser.urlencoded({extended: true}))
+
+app.use(bodyParser.json({limit: '50mb'}));
+app.use(bodyParser.urlencoded({limit: '50mb', extended: true}));
 
 
 viewEngine(app);
