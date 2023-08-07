@@ -8,12 +8,6 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-    //   doctorId
-    //   clinicId
-    //   specialtyid
-    //   contentHTML
-    //   contentMarkdown
-    //   description
       doctorId: {
         type: Sequelize.INTEGER
       },
