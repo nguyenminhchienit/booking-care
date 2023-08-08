@@ -54,18 +54,33 @@ let getAllDoctor = () => {
 let postInfoDoctorService = (dataInput) => {
     return new Promise ( async (resolve, reject) => {
         try {
-            if(!dataInput.doctorId || !dataInput.contentHTML || !dataInput.contentMarkdown){
+            if(!dataInput.doctorId || !dataInput.contentHTML || !dataInput.contentMarkdown || !dataInput.action){
                 resolve({
                     errCode: 1,
                     message: "Missing params"
                 })
             }else{
-                await db.Markdown.create({
-                    contentHTML: dataInput.contentHTML,
-                    contentMarkdown: dataInput.contentMarkdown,
-                    description: dataInput.description,
-                    doctorId: dataInput.doctorId
-                })
+                if(dataInput.action == 'CREATE'){
+                    await db.Markdown.create({
+                        contentHTML: dataInput.contentHTML,
+                        contentMarkdown: dataInput.contentMarkdown,
+                        description: dataInput.description,
+                        doctorId: dataInput.doctorId
+                    })
+                }else if (dataInput.action === 'EDIT'){
+                    let doctorMarkdown = await db.Markdown.findOne({
+                        where: {
+                            doctorId: dataInput.doctorId
+                        },
+                        raw: false
+                    })
+                    if(doctorMarkdown){
+                        doctorMarkdown.contentHTML= dataInput.contentHTML;
+                        doctorMarkdown.contentMarkdown= dataInput.contentMarkdown;
+                        doctorMarkdown.description= dataInput.description;
+                        await doctorMarkdown.save()
+                    }
+                }
                 resolve({
                     errCode: 0,
                     message: "Save info doctor success"
@@ -79,9 +94,53 @@ let postInfoDoctorService = (dataInput) => {
     })
 }
 
+let getDetailDoctorById = (inputId) => {
+    return new Promise( async (resolve, reject) => {
+        try {
+            if(!inputId){
+                resolve({
+                    errCode: 1,
+                    message: "Missing params"
+                })
+            }else{
+                
+                    let data = await db.User.findOne({
+                    where: {
+                        id: inputId
+                    },
+                    attributes: {
+                        exclude: ['password']
+                    },
+                    include: [
+                        { model: db.Markdown, attributes: ['description','contentHTML', 'contentMarkdown'] },
+                        { model: db.Allcode, as: 'positionData', attributes: ['valueEN','valueVI'] },
+                        
+                    ],
+                    raw: true,
+                    nest: true
+                })
+                if(!data){
+                    data = {}
+                }
+                if(data && data.image){
+                    data.image = new Buffer (data.image, 'base64').toString('binary')
+                }
+                resolve({
+                    errCode: 0,
+                    message: "Get info doctor succeed",
+                    data: data
+                })
+            }
+        } catch (e) {
+            reject(e)
+        }
+    })
+}
+
 
 module.exports = {
     getDoctor,
     getAllDoctor,
-    postInfoDoctorService
+    postInfoDoctorService,
+    getDetailDoctorById
 }

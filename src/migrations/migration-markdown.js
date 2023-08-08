@@ -15,15 +15,18 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       description: {
+        allowNull: false,
         type: Sequelize.TEXT('long')
       },
       specialtyId: {
         type: Sequelize.INTEGER
       },
       contentHTML: {
+        allowNull: false,
         type: Sequelize.TEXT('long')
       },
       contentMarkdown: {
+        allowNull: false,
         type: Sequelize.TEXT('long')
       },
       createdAt: {
