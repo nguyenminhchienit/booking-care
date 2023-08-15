@@ -17,8 +17,8 @@ module.exports = {
       date: {
         type: Sequelize.DATE
       },
-      date: {
-        type: Sequelize.DATE
+      timeType: {
+        type: Sequelize.STRING
       },
       doctorId: {
         type: Sequelize.INTEGER

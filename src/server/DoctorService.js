@@ -1,4 +1,8 @@
 import db from "../models/index";
+require('dotenv').config()
+import _ from 'lodash'
+
+const MAX_NUMBER_SCHEDULE = process.env.MAX_NUMBER_SCHEDULE
 
 let getDoctor = (limit) => {
     return new Promise( async (resolve,reject) => {
@@ -137,10 +141,67 @@ let getDetailDoctorById = (inputId) => {
     })
 }
 
+let bulkCreateScheduleService = (data) => {
+    return new Promise( async (resolve, reject) => {
+        try {
+            if(!data.arrSchedule || !data.doctorId || !data.formatDate){
+                resolve({
+                    errCode: 1,
+                    message: "Missing params"
+                })
+            }else{
+                let schedule = data.arrSchedule;
+                if(schedule && schedule.length > 0){
+                    schedule.map((item) => {
+                        item.maxNumber = MAX_NUMBER_SCHEDULE
+                        return item;
+                    })
+                }
+                // console.log(schedule)
+                
+
+                let existing = await db.Schedule.findAll({
+                    where: {
+                        doctorId: data.doctorId,
+                        date: data.formatDate
+                    },
+                    attributes: ['doctorId','maxNumber','timeType','date'],
+                    raw: true
+                })
+
+                if(existing && existing.length > 0){
+                    existing.map((item) => {
+                        item.date = new Date(item.date).getTime()
+                        return item
+                    })
+                }
+
+                let newSchedule = _.differenceWith(schedule,existing,(a,b) => {
+                    return a.timeType === b.timeType && a.date === b.date
+                }) 
+
+                // console.log("New Schedule", newSchedule)
+
+                if(newSchedule && newSchedule.length > 0){
+                    await db.Schedule.bulkCreate(newSchedule)
+                }
+
+                resolve({
+                    errCode: 0, 
+                    message: "OK",
+                })
+            }
+            
+        } catch (e) {
+            reject(e)
+        }
+    })
+}
 
 module.exports = {
     getDoctor,
     getAllDoctor,
     postInfoDoctorService,
-    getDetailDoctorById
+    getDetailDoctorById,
+    bulkCreateScheduleService
 }
