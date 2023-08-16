@@ -171,7 +171,7 @@ let bulkCreateScheduleService = (data) => {
 
                 if(existing && existing.length > 0){
                     existing.map((item) => {
-                        item.date = new Date(item.date).getTime()
+                        item.date = Number(item.date)
                         return item
                     })
                 }
