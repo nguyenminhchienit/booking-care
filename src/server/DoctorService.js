@@ -211,7 +211,12 @@ let getScheduleDoctorService = (date,doctorId) => {
                     where:{
                         date: date,
                         doctorId: doctorId
-                    }
+                    },
+                    include: [
+                        { model: db.Allcode, as: 'timeTypeData', attributes: ['valueEN','valueVI'] },                       
+                    ],
+                    nest: true,
+                    raw: false
                 })
 
                 if(!data) data = []
