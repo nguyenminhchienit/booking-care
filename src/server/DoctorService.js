@@ -58,7 +58,9 @@ let getAllDoctor = () => {
 let postInfoDoctorService = (dataInput) => {
     return new Promise ( async (resolve, reject) => {
         try {
-            if(!dataInput.doctorId || !dataInput.contentHTML || !dataInput.contentMarkdown || !dataInput.action){
+            if(!dataInput.doctorId || !dataInput.contentHTML || !dataInput.contentMarkdown || !dataInput.action
+               || !dataInput.description || !dataInput.selectedPrice || !dataInput.selectedProvince 
+               || !dataInput.selectedPayment || !dataInput.addressClinic || !dataInput.nameClinic || !dataInput.note){
                 resolve({
                     errCode: 1,
                     message: "Missing params"
@@ -84,6 +86,34 @@ let postInfoDoctorService = (dataInput) => {
                         doctorMarkdown.description= dataInput.description;
                         await doctorMarkdown.save()
                     }
+                }
+
+                //save doctor info table
+                let doctorInfo = await db.DoctorInfo.findOne({
+                    where: {
+                        doctorId: dataInput.doctorId,
+                    },
+                    raw: false
+                })
+
+                if(doctorInfo){ // if have been => update
+                    doctorInfo.priceId= dataInput.selectedPrice;
+                    doctorInfo.provinceId= dataInput.selectedProvince;
+                    doctorInfo.paymentId= dataInput.selectedPayment;
+                    doctorInfo.addressClinic= dataInput.addressClinic;
+                    doctorInfo.nameClinic= dataInput.nameClinic;
+                    doctorInfo.note= dataInput.note;
+                    await doctorInfo.save()
+                }else{ // if haven't been => create
+                    await db.DoctorInfo.create({
+                        doctorId: dataInput.doctorId,
+                        priceId: dataInput.selectedPrice,
+                        provinceId: dataInput.selectedProvince,
+                        paymentId: dataInput.selectedPayment,
+                        addressClinic: dataInput.addressClinic,
+                        nameClinic: dataInput.nameClinic,
+                        note: dataInput.note,
+                    })
                 }
                 resolve({
                     errCode: 0,
