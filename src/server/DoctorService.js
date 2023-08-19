@@ -311,6 +311,59 @@ let getExtraDoctorInfoService = (inputId) => {
     })
 }
 
+let getProfileDoctorByIdService = (inputId) => {
+    return new Promise ( async (resolve,reject) => {
+        try {
+            if(!inputId){
+                resolve({
+                    errCode: 1,
+                    message: "Missing params"
+                })
+            }else{
+                let data = await db.User.findOne({
+                    where: {
+                        id: inputId
+                    },
+                    attributes: {
+                        exclude: ['password']
+                    },
+                    include: [
+                        { model: db.Markdown, attributes: ['description'] },
+                        { model: db.Allcode, as: 'positionData', attributes: ['valueEN','valueVI'] },
+                        { 
+                            model: db.DoctorInfo,
+                            attributes:{
+                                exclude: ['doctorId', 'id']
+                            },
+                            include: [
+                                { model: db.Allcode, as: 'priceTypeData', attributes: ['valueEN','valueVI'] },
+                                { model: db.Allcode, as: 'provinceTypeData', attributes: ['valueEN','valueVI'] },
+                                { model: db.Allcode, as: 'paymentTypeData', attributes: ['valueEN','valueVI'] },
+                            ]
+                        }                       
+                    ],
+                    raw: true,
+                    nest: true
+                })
+                if(!data){
+                    data = {}
+                }
+                if(data && data.image){
+                    data.image = new Buffer (data.image, 'base64').toString('binary')
+                }
+                resolve({
+                    errCode: 0,
+                    message: "Get info doctor succeed",
+                    data: data
+                })
+            }
+            
+        } catch (e) {
+            reject(e)
+        }
+    })
+}
+
 module.exports = {
     getDoctor,
     getAllDoctor,
@@ -318,5 +371,6 @@ module.exports = {
     getDetailDoctorById,
     bulkCreateScheduleService,
     getScheduleDoctorService,
-    getExtraDoctorInfoService
+    getExtraDoctorInfoService,
+    getProfileDoctorByIdService
 }
