@@ -1,6 +1,6 @@
 import db from "../models/index";
 require('dotenv').config()
-import _, { reject } from 'lodash'
+import _, { flatMap, reject } from 'lodash'
 
 const MAX_NUMBER_SCHEDULE = process.env.MAX_NUMBER_SCHEDULE
 
@@ -273,11 +273,50 @@ let getScheduleDoctorService = (date,doctorId) => {
     })
 }
 
+let getExtraDoctorInfoService = (inputId) => {
+    return new Promise ( async (resolve,reject) => {
+        try {
+            if(!inputId){
+                resolve({
+                    errCode: 1,
+                    message: "Missing params"
+                })
+            }else{
+                let data = await db.DoctorInfo.findOne({
+                    where: {
+                        doctorId: inputId
+                    },
+                    attributes:{
+                        exclude: ['doctorId', 'id']
+                    },
+                    include: [
+                        { model: db.Allcode, as: 'priceTypeData', attributes: ['valueEN','valueVI'] },
+                        { model: db.Allcode, as: 'provinceTypeData', attributes: ['valueEN','valueVI'] },
+                        { model: db.Allcode, as: 'paymentTypeData', attributes: ['valueEN','valueVI'] },
+                    ],
+                    nest: true,
+                    raw: false
+                })
+                if(!data) data = []
+                resolve({
+                    errCode: 0,
+                    message:"OK",
+                    data: data
+                })
+            }
+            
+        } catch (e) {
+            reject(e)
+        }
+    })
+}
+
 module.exports = {
     getDoctor,
     getAllDoctor,
     postInfoDoctorService,
     getDetailDoctorById,
     bulkCreateScheduleService,
-    getScheduleDoctorService
+    getScheduleDoctorService,
+    getExtraDoctorInfoService
 }
