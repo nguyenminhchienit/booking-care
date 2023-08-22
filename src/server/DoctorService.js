@@ -253,7 +253,8 @@ let getScheduleDoctorService = (date,doctorId) => {
                         doctorId: doctorId
                     },
                     include: [
-                        { model: db.Allcode, as: 'timeTypeData', attributes: ['valueEN','valueVI'] },                       
+                        { model: db.Allcode, as: 'timeTypeData', attributes: ['valueEN','valueVI'] },
+                        { model: db.User, as: 'doctorData', attributes: ['firstName','lastName'] },
                     ],
                     nest: true,
                     raw: false

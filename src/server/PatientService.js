@@ -15,10 +15,10 @@ let handlePostAppointmentService = (data) => {
 
                 await EmailService.sendEmail({
                     receiverEmail: data.email,
-                    patientName: 'Dương Hải Nam',
-                    doctorName: 'TakisCare',
+                    patientName: data.fullName,
+                    doctorName: data.doctorName,
                     redirectLink: "https://sinhvien.hutech.edu.vn/#/sinhvien/login/login",
-                    time: "15:00 - 16:00 22/08/2023"
+                    time: data.timeString
                 })
                 //upsert ( insert/update)
                 let user = await db.User.findOrCreate({
