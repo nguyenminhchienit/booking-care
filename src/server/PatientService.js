@@ -1,6 +1,7 @@
 import db from "../models/index";
 require('dotenv').config()
 import _ from 'lodash'
+import EmailService from './EmailService'
 
 let handlePostAppointmentService = (data) => {
     return new Promise( async (resolve,reject) => {
@@ -11,6 +12,14 @@ let handlePostAppointmentService = (data) => {
                     message: "Missing params"
                 })
             }else{
+
+                await EmailService.sendEmail({
+                    receiverEmail: data.email,
+                    patientName: 'Dương Hải Nam',
+                    doctorName: 'TakisCare',
+                    redirectLink: "https://sinhvien.hutech.edu.vn/#/sinhvien/login/login",
+                    time: "15:00 - 16:00 22/08/2023"
+                })
                 //upsert ( insert/update)
                 let user = await db.User.findOrCreate({
                     where: {
