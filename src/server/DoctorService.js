@@ -60,10 +60,11 @@ let postInfoDoctorService = (dataInput) => {
         try {
             if(!dataInput.doctorId || !dataInput.contentHTML || !dataInput.contentMarkdown || !dataInput.action
                || !dataInput.description || !dataInput.selectedPrice || !dataInput.selectedProvince 
-               || !dataInput.selectedPayment || !dataInput.addressClinic || !dataInput.nameClinic || !dataInput.note){
+               || !dataInput.selectedPayment || !dataInput.addressClinic || !dataInput.nameClinic || !dataInput.note
+               || !dataInput.specialtyId){
                 resolve({
                     errCode: 1,
-                    message: "Missing params"
+                    message: `Missing params`
                 })
             }else{
                 if(dataInput.action == 'CREATE'){
@@ -103,6 +104,8 @@ let postInfoDoctorService = (dataInput) => {
                     doctorInfo.addressClinic= dataInput.addressClinic;
                     doctorInfo.nameClinic= dataInput.nameClinic;
                     doctorInfo.note= dataInput.note;
+                    doctorInfo.specialtyId = dataInput.specialtyId;
+                    doctorInfo.clinicId = dataInput.clinicId
                     await doctorInfo.save()
                 }else{ // if haven't been => create
                     await db.DoctorInfo.create({
@@ -113,6 +116,8 @@ let postInfoDoctorService = (dataInput) => {
                         addressClinic: dataInput.addressClinic,
                         nameClinic: dataInput.nameClinic,
                         note: dataInput.note,
+                        specialtyId: dataInput.specialtyId,
+                        clinicId: dataInput.clinicId
                     })
                 }
                 resolve({
