@@ -29,6 +29,30 @@ let postCreateNewSpecialtyService = (data) => {
     })
 }
 
+let getAllSpecialtyService = () => {
+    return new Promise ( async (resolve, reject) => {
+        try {
+            let data = await db.Specialty.findAll();
+            if(data && data.length > 0){
+                data.map(item => {
+                    if(item && item.image){
+                        item.image = new Buffer (item.image, 'base64').toString('binary')
+                    }
+                })
+            }
+            resolve({
+                errCode: 0,
+                message: "Get specialty succeed!",
+                data
+            })
+            
+        } catch (e) {
+            reject(e)
+        }
+    })
+}
+
 module.exports = {
-    postCreateNewSpecialtyService
+    postCreateNewSpecialtyService,
+    getAllSpecialtyService
 }
