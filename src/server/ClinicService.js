@@ -31,6 +31,61 @@ let postCreateNewClinicService = (data) => {
     })
 }
 
+let getAllClinicService = () => {
+    return new Promise ( async (resolve, reject) => {
+        try {
+            let data = await db.Clinic.findAll();
+            if(data && data.length > 0){
+                data.map(item => {
+                    if(item && item.image){
+                        item.image = new Buffer (item.image, 'base64').toString('binary')
+                    }
+                })
+            }
+            resolve({
+                errCode: 0,
+                message: "Get specialty succeed!",
+                data
+            })
+            
+        } catch (e) {
+            reject(e)
+        }
+    })
+}
+
+let getClinicDoctorByIdService = (inputId) => {
+    return new Promise( async (resolve,reject) => {
+        try {
+            if(!inputId){
+                resolve({
+                    errCode: 1,
+                    message: "Missing params"
+                })
+            }else{
+                let data = await db.Clinic.findOne({
+                    where: {
+                        id: inputId
+                    },
+                    attributes: ['name','address','descHTML','descMarkdown']
+                })
+                if(!data) data = {}
+                
+                resolve({
+                    errCode: 0,
+                    message: "Get specialty info succeed!",
+                    data
+                })
+            }
+            
+        } catch (e) {
+            reject(e)
+        }
+    })
+}
+
 module.exports = {
-    postCreateNewClinicService
+    postCreateNewClinicService,
+    getAllClinicService,
+    getClinicDoctorByIdService
 }
