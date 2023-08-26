@@ -11,7 +11,8 @@ let buildUrlVerifyMail = (doctorId,token) => {
 let handlePostAppointmentService = (data) => {
     return new Promise( async (resolve,reject) => {
         try {
-            if(!data.email || !data.doctorId || !data.timeType || !data.date){
+            if(!data.email || !data.doctorId || !data.timeType || !data.date || !data.fullName
+               || !data.address || !data.selectedGender){
                 resolve({
                     errCode: 1,
                     message: "Missing params"
@@ -34,10 +35,13 @@ let handlePostAppointmentService = (data) => {
                     },
                     defaults: {
                         email: data.email,
+                        firstName: data.fullName,
+                        address: data.address,
+                        gender: data.selectedGender,
                         roleId: 'R3'
                     }
                 })
-                //console.log("check user: ",user[0])
+                //console.log("check user: ",user[0]) // true or false
                 if(user && user[0]){
                     await db.Booking.findOrCreate({
                         where: {

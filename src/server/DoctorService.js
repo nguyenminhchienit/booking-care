@@ -370,6 +370,46 @@ let getProfileDoctorByIdService = (inputId) => {
     })
 }
 
+let getListPatientForDoctorService = (doctorId,date) => {
+    return new Promise( async (resolve,reject) => {
+        try {
+            if(!doctorId || !date){
+                resolve({
+                    errCode: 1,
+                    message: "Missing params"
+                })
+            }else{
+                let data = await db.Booking.findAll({
+                    where:{
+                        statusId: 'S2',
+                        doctorId: doctorId,
+                        date: date
+                    },
+                    include: [
+                        { 
+                            model: db.User, as: 'patientData', 
+                            attributes: ['email','firstName','address','gender'],
+                            include: [
+                                { model: db.Allcode, as: 'genderData', attributes: ['valueEN','valueVI'] }
+                            ], 
+                        },
+                    ],
+                    raw: true,
+                    nest: true
+                })
+                resolve({
+                    errCode: 0,
+                    message: "Get list patient for doctor succeed",
+                    data: data
+                })
+            }
+            
+        } catch (e) {
+            reject(e)
+        }
+    })
+}
+
 module.exports = {
     getDoctor,
     getAllDoctor,
@@ -378,5 +418,6 @@ module.exports = {
     bulkCreateScheduleService,
     getScheduleDoctorService,
     getExtraDoctorInfoService,
-    getProfileDoctorByIdService
+    getProfileDoctorByIdService,
+    getListPatientForDoctorService
 }
