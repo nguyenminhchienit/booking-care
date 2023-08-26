@@ -67,8 +67,12 @@ let getClinicDoctorByIdService = (inputId) => {
                     where: {
                         id: inputId
                     },
-                    attributes: ['name','address','descHTML','descMarkdown']
+                    attributes: ['name','address','descHTML','descMarkdown','image']
                 })
+                
+                if(data && data.image){
+                    data.image = new Buffer (data.image, 'base64').toString('binary')
+                }
                 if(!data) data = {}
                 
                 resolve({
