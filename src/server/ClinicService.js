@@ -73,6 +73,19 @@ let getClinicDoctorByIdService = (inputId) => {
                 if(data && data.image){
                     data.image = new Buffer (data.image, 'base64').toString('binary')
                 }
+
+                if(data){
+                    let doctorClinic = []
+                    
+                        doctorClinic = await db.DoctorInfo.findAll({
+                            where: {
+                                clinicId: inputId
+                            },
+                            attributes: ['doctorId', 'provinceId']
+                        })
+                    
+                    data.doctorClinic = doctorClinic
+                }
                 if(!data) data = {}
                 
                 resolve({

@@ -61,7 +61,7 @@ let postInfoDoctorService = (dataInput) => {
             if(!dataInput.doctorId || !dataInput.contentHTML || !dataInput.contentMarkdown || !dataInput.action
                || !dataInput.description || !dataInput.selectedPrice || !dataInput.selectedProvince 
                || !dataInput.selectedPayment || !dataInput.addressClinic || !dataInput.nameClinic || !dataInput.note
-               || !dataInput.specialtyId){
+               || !dataInput.specialtyId || !dataInput.clinicId){
                 resolve({
                     errCode: 1,
                     message: `Missing params`
