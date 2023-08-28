@@ -100,10 +100,36 @@ let getSpecialtyDoctorByIdService = (inputId, location) => {
             reject(e)
         }
     })
-} 
+}
+
+const { Op } = require("sequelize");
+let handleSearchService = (name) => {
+    return new Promise ( async (resolve, reject) => {
+        try {
+            var options = {
+                where: {
+                    name: { [Op.like]: '%' + name + '%' },
+                    // description: { [Op.like]: '%' + searchQuery2 + '%' }
+                },
+                attributes: ["name","id"]
+              };
+            let data = await db.Specialty.findAll(options);
+            
+            resolve({
+                errCode: 0,
+                message: "Get specialty succeed!",
+                data
+            })
+            
+        } catch (e) {
+            reject(e)
+        }
+    })
+}
 
 module.exports = {
     postCreateNewSpecialtyService,
     getAllSpecialtyService,
-    getSpecialtyDoctorByIdService
+    getSpecialtyDoctorByIdService,
+    handleSearchService
 }
