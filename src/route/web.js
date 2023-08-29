@@ -60,6 +60,8 @@ let initWebRoutes = (app) => {
     router.get("/api/search-specialty",specialtyController.handleSearch)
 
     router.post("/api/create-new-handbook",handbookController.postCreateNewHandbook)
+    router.get("/api/get-handbook-by-id",handbookController.getHandbookById)
+    router.get("/api/get-all-handbook",handbookController.getAllHandbook)
 
     return app.use("/",router)
 }
