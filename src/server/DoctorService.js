@@ -596,7 +596,7 @@ let postHandleSendRemedyDoneService = (data) => {
         });
 
         if (appointment) {
-          appointment.statusId = "S4";
+          appointment.statusId = "S5";
           await appointment.save();
         }
 

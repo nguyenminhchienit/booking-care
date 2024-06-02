@@ -94,6 +94,9 @@ let initWebRoutes = (app) => {
     clinicController.getClinicDoctorById
   );
 
+  router.put("/api/update-clinic", clinicController.handleUpdateClinicById);
+  router.delete("/api/delete-clinic", clinicController.handleDeleteClinic);
+
   router.get("/api/search-specialty", specialtyController.handleSearch);
 
   router.post(
@@ -108,6 +111,13 @@ let initWebRoutes = (app) => {
 
   router.get("/api/get-all-bookings", bookingController.getAllBooking);
   router.get("/api/get-booking-with-month", bookingController.fetchDataByMonth);
+  router.get("/api/get-booking-with-day", bookingController.getBookingWithDay);
+
+  router.get("/api/get-booking-user", patientController.getBookingUser);
+  router.put(
+    "/api/get-booking-cancel",
+    patientController.postHandleSendCancelBooking
+  );
 
   return app.use("/", router);
 };
