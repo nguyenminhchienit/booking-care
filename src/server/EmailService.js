@@ -19,7 +19,6 @@ let sendEmail = async (data) => {
     to: data.receiverEmail, // list of receivers
     subject: "Thông tin đặt lịch khám bệnh", // Subject line
     html: `
-            <h3>Xin chào: ${data.patientName}!</h3>
             <p>Bạn nhận được email này vì đã đặt lịch khám bệnh online trên TakisCare</p>
             <div style="color: red">Thông tin đặt lịch khám bệnh</div>
             <div><b>Thời gian: ${data.time}</b></div>

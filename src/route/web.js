@@ -106,6 +106,15 @@ let initWebRoutes = (app) => {
   router.get("/api/get-handbook-by-id", handbookController.getHandbookById);
   router.get("/api/get-all-handbook", handbookController.getAllHandbook);
 
+  router.put(
+    "/api/update-handbook",
+    handbookController.handleUpdateHandbookById
+  );
+  router.delete(
+    "/api/delete-handbook",
+    handbookController.handleDeleteHandbook
+  );
+
   router.post("/api/post-histories", historyController.postHistories);
   router.get("/api/get-all-histories", historyController.getAllHistories);
 
